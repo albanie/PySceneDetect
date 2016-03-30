@@ -28,6 +28,7 @@
 
 # Standard Library Imports
 from __future__ import print_function
+from __future__ import division
 import sys
 import os
 import argparse
@@ -350,10 +351,10 @@ def main():
 
     # Create new list with scene cuts in milliseconds (original uses exact
     # frame numbers) based on the video's framerate, and then timecodes.
-    scene_list_msec = [(1000.0 * x) / float(video_fps) for x in scene_list]
+    scene_list_msec = [(1000.0 * x[0]) / float(video_fps) for x in scene_list]
     scene_list_tc = [scenedetect.timecodes.get_string(x) for x in scene_list_msec]
     # Create new lists with scene cuts in seconds, and the length of each scene.
-    scene_start_sec = [(1.0 * x) / float(video_fps) for x in scene_list]
+    scene_start_sec = [(1.0 * x[0]) / float(video_fps) for x in scene_list]
     scene_len_sec = []
     if len(scene_list) > 0:
         scene_len_sec = scene_list + [frames_read]
@@ -370,11 +371,11 @@ def main():
             if args.list_scenes:
                 print('[PySceneDetect] List of detected scenes:')
                 print ('-------------------------------------------')
-                print ('  Scene #  |   Frame #   |    Timecode ')
+                print ('  Scene #  |   Frame #   |  Score #    |  Timecode ')
                 print ('-------------------------------------------')
-                for scene_idx, frame_num in enumerate(scene_list):
-                    print ('    %3d    |  %9d  |  %s' % (
-                        scene_idx+1, frame_num, scene_list_tc[scene_idx]))
+                for scene_idx, frame_pair in enumerate(scene_list):
+                    print ('    %3d    |  %9d  |  %9d  | %s' % (
+                        scene_idx+1, frame_pair[0], frame_pair[1], scene_list_tc[scene_idx]))
                 print ('-------------------------------------------')
             print('[PySceneDetect] Comma-separated timecode output:')
 

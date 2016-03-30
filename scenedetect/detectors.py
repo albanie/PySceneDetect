@@ -27,6 +27,8 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 
+from __future__ import division
+
 # Third-Party Library Imports
 import cv2
 import numpy
@@ -295,7 +297,7 @@ class ContentDetector(SceneDetector):
             if delta_hsv_avg >= self.threshold:
                 if self.last_scene_cut is None or (
                   (frame_num - self.last_scene_cut) >= self.min_scene_len):
-                    scene_list.append(frame_num)
+                    scene_list.append((frame_num, delta_hsv_avg))
                     self.last_scene_cut = frame_num
                     cut_detected = True
 
